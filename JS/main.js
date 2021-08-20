@@ -1,9 +1,9 @@
 module.exports = function sortCategoriesForInsert(entryArray, id=null){
     var sorted=[];
-    for(x of entryArray){
-        if (x.parent_id===id){
-            sorted=sorted.concat(x);
-            sorted=sorted.concat(sortCategoriesForInsert(entryArray,x.id));
+    for(item of entryArray){
+        if (item.parent_id===id){
+            sorted=sorted.concat(item);
+            sorted=sorted.concat(sortCategoriesForInsert(entryArray,item.id));
         }
     }
     return sorted

@@ -1,24 +1,13 @@
 import json, re
 
-global entryArray, parrentId
-
-def sortRecursion(id=None):
-    global entryArray, parrentId
+def sort_function(entryArray, id=None):
     sorted=[]
-    for element in parrentId[str(id)]:
-        sorted.append(entryArray[element])
-        if str(entryArray[element]['id']) in parrentId:
-            sorted.extend(sortRecursion(entryArray[element]['id']))
+    for item in tuple(entryArray):
+        if item['parent_id']==id:
+            sorted.append(item)
+            entryArray.remove(item)
+            sorted.extend(sort_function(entryArray,item['id']))
     return sorted
-
-def sort_function():
-    global entryArray, parrentId
-    parrentId={}
-    for x, item in enumerate(entryArray):
-        if str(item['parent_id']) not in parrentId:
-            parrentId[str(item['parent_id'])]=[]
-        parrentId[str(item['parent_id'])].append(x)
-    return sortRecursion()
 
 def trailing_commas_clean(entryString):
     entryString = re.sub(",[ \t\r\n]+}", "}", entryString)
@@ -36,11 +25,6 @@ if __name__ == '__main__':
         {
             "name": "Watches",
             "id": 57,
-            "parent_id": 1
-        },
-        {
-            "name": "Belt",
-            "id": 58,
             "parent_id": 1
         },
         {
@@ -64,5 +48,5 @@ if __name__ == '__main__':
             "parent_id": null
         }
         ]'''
-    entryArray=json.loads(trailing_commas_clean(testString))
-    print(json.dumps(sort_function(), indent = 4))
+
+    print(json.dumps(sort_function(json.loads(trailing_commas_clean(testString))), indent = 4))
